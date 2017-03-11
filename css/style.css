@@ -42,7 +42,7 @@ img{
 }
 
 #weather-image{
-  margin: -5%;
+  margin: -10%;
   padding-left: 8%;
 
 }
@@ -63,6 +63,10 @@ display: table-cell;
 
 #city, #lat, #lon, .temp{
   line-height: 2.5em;
+}
+
+#lon{
+	padding-top: 5%;
 }
 
 .temp, #speed{

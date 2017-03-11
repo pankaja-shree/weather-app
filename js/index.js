@@ -1,9 +1,8 @@
 
 $(document).ready(function(){
   
-  var key = "a9445f3cb154571ad56fc734ee9bc91c";
   var lat, lon, api, city, apidata;
-  var cel = false;
+  var cel = true;
   
   getLoc();
   setInterval(getLoc, 1800000);
@@ -14,25 +13,28 @@ $(document).ready(function(){
   }
   }
   
-  function tempToggle(ftemp,c){
-    if(c) return Math.round((ftemp-32) * (5/9)) +' C';
-    return Math.round(ftemp) + ' F';
-  }
-  
+   
   function renderData(json,cel){
-    var ft = json.main.temp;
-                var currentTemp = tempToggle(json.main.temp,cel);
-                var des = json.weather[0].description;
-                city = json.name;
+    
+                var currentTemp;
+				if(cel){
+					currentTemp = json.current.temp_c + "°C";
+				}
+				else{
+					currentTemp = json.current.temp_f + "°F";
+				}
+				
+                var des = json.current.condition.text;
+                city = json.location.name;
 
                 $("#lat").html('Latitude: '+ lat.toFixed(2)); 
                 $("#lon").html('Longitude: ' + lon.toFixed(2));
                 $("#city").html(city);
                 $(".temp").html(currentTemp);
                 $("#weather").html(des);
-                $("#speed").html(' ' + json.wind.speed + ' mps');
+                $("#speed").html(' ' + json.current.wind_mph + ' mph');
      
-                var iconsrc = 'http://openweathermap.org/img/w/'+json.weather[0].icon+'.png';
+                var iconsrc = 'https:' + json.current.condition.icon;
           
                 document.getElementById("weather-image").src = iconsrc;
   }
@@ -40,19 +42,8 @@ $(document).ready(function(){
   function weatherInfo(pos){
     lat = pos.coords.latitude;
     lon = pos.coords.longitude;
-/* to work on http: 
-      $.getJSON("http://ipinfo.io/json",function(data){
-        
-        var loc = data.loc;
-        loc = loc.split(",");
-        lat = loc[0];
-        lon = loc[1];
-        city = data.city;
-        api = "http://api.openweathermap.org/data/2.5/weather?q="+city+"&units=imperial&APPID="+key;
-        console.log(api);
-        */
-   api = "http://api.openweathermap.org/data/2.5/weather?lat="+lat+"&lon="+lon+"&units=imperial&APPID="+key;
-        $.getJSON(api,function(json){
+	var url = 'https://api.apixu.com/v1/current.json?key=b1385ce3224e427e954191546172802&q=' + lat + ',' + lon;
+    $.getJSON(url,function(json){
                 apidata = json;
                 renderData(json,cel);
                 
